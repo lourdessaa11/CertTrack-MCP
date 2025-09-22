@@ -11,6 +11,39 @@ References: MCP architecture & spec.
 - https://modelcontextprotocol.io/specification/2025-06-18/architecture  
  
 ---
+
+## Quick Start
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/lourdessaa11/CertTrack-MCP.git
+   cd CertTrack-MCP
+   ```
+
+2. Create and activate a virtual environment, then install dependencies:
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\activate    # Windows
+   # source .venv/bin/activate   # Mac/Linux
+   pip install -r requirements.txt
+   ```
+
+3. Create a file `.env` in the project root. Minimum config:
+   ```
+   GOOGLE_SHEETS_MASTER_ID=<your_sheet_id>
+   GOOGLE_SHEETS_TAB=Master
+   MS_AUTH_MODE=user
+   MS_CLIENT_ID=<your_azure_app_client_id>
+   ```
+
+4. Run the server:
+   ```bash
+   python server.py
+   ```
+
+The server will start and expose its tools. Use your MCP host to connect and call them.
+
+---
  
 ## Tools
  
