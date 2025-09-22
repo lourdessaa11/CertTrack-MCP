@@ -44,6 +44,40 @@ References: MCP architecture & spec.
 The server will start and expose its tools. Use your MCP host to connect and call them.
 
 ---
+## Using this server with any MCP host
+This repository provides the **MCP server** only. To interact with its tools you need an **MCP host**.
+You can use Claude Desktop / VS Code MCP clients, or the minimal `client_example.py` included here.
+
+### Option 1 — Run the minimal Python host (client_example.py)
+1) Ensure you can run the server:
+   ```bash
+   python server.py
+   ```
+2) In another terminal, run the minimal host:
+    ```bash
+   python client_example.py
+   ```
+3) It will:
+   - Initialize an MCP session via STDIO,
+   - List available tools,
+    - Call `list_my_certs` and `alerts_schedule_due` as examples.
+
+### Option 2 — Use a GUI MCP host (e.g., Claude Desktop / VS Code)
+- Configure the host to start this server via **STDIO**:
+  - Command: `python`
+  - Args: `-m certtrack_mcp.server`
+- The host should discover tools automatically (via `list_tools`) and you can then call:
+  - `list_my_certs(nombre: string)`
+  - `sheets_append_cert(row: object)`
+  - `alerts_schedule_due(days?: number = 30)`
+  - `outlook_send_email(to: string, subject: string, html: string)`
+- See the **Tools** section below for inputs/outputs and notes.
+
+---
+
+## Host/Server roles (MCP overview)
+- This repo is the **server**: it exposes tools over JSON-RPC/STDIO.
+- A separate **host** (client) connects, discovers tools (`list_tools`) and calls them (`call_tool`).
  
 ## Tools
  
@@ -160,6 +194,41 @@ The server will start and expose its tools. Use your MCP host to connect and cal
 { "ok": true, "message_id": "mock-<hash>", "provider": "mock" }
 ```
 **References (Graph):** `POST /me/sendMail` (delegated) and Mail.Send permission.
+
+---
+## Tool invocation examples (payloads)
+Below are typical `call_tool` argument objects a host would send after `list_tools`:
+- `list_my_certs`
+  ```json
+  { "nombre": "Laura Lopez" }
+  ```
+- `sheets_append_cert`
+  ```json
+  {
+    "row": {
+      "id": "u4-dev-004",
+      "certificacion": "DevOps I",
+      "nombre": "Laura Lopez",
+      "fecha": "2025-10-01",
+      "vigencia_meses": 12,
+      "proveedor": "AWS",
+      "tipo": "Tecnica",
+      "costo": 150
+    }
+  }
+  ```
+- `alerts_schedule_due`
+  ```json
+  { "days": 30 }
+  ```
+- `outlook_send_email`
+  ```json
+  {
+    "to": "you@example.com",
+    "subject": "Aviso de vencimiento",
+    "html": "<p>Tu certificación X vence el 2025-10-01.</p>"
+  }
+  ```
 
 ---
 
