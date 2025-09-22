@@ -1,0 +1,6 @@
+﻿.env
+google_credentials.json
+token.json
+graph_user_cache.json
+logs/
+__pycache__/
